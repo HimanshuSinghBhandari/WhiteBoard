@@ -56,9 +56,18 @@ export default function Home() {
     <h1 className="text-4xl text-white">Welcome, {userData.username}!</h1>
   )}
   {!isLoggedIn && (
-    <div className="absolute inset-0 flex items-center justify-center">
-      <Particles />
-    </div>
+    <div className="relative max-w-6xl min-h-screen px-4 mx-auto sm:px-6 flex flex-col items-center justify-center">
+    <Particles />
+    <div className="pt-32 pb-16 md:pt-52 md:pb-32 text-center">
+    <h1 className="pb-4 font-extrabold text-sm lg:text-3xl leading-tight text-transparent bg-clip-text bg-gradient-to-r from-zinc-200/60 via-zinc-200 to-zinc-200/60">
+    <span className="text-xl lg:text-7xl block">Digital whiteboard</span>  
+    <span className="text-lg md:text-xl lg:text-2xl">Visualize your thoughts and ideas</span>
+    </h1>
+    {/* <p className="mb-8 text-lg text-zinc-300">
+      Draw your ideas 
+    </p> */}
+   </div>
+  </div>
   )}
 </div>
   );
