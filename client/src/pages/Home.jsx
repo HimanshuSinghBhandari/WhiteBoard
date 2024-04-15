@@ -35,12 +35,12 @@ export default function Home() {
 
   const Popup = ({ username }) => {
     return (
-      <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center">
-        <div className="bg-white shadow-md rounded-lg p-8">
-          <h2 className="text-2xl font-bold mb-4">Welcome, {username}!</h2>
-          <p>You can now access features specific to logged-in users.</p>
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+        <div className="bg-white p-8 rounded-lg shadow-md">
+          <h2 className="text-3xl font-bold mb-4">Welcome, {username}!</h2>
+          <p className="text-gray-600">You can now access features specific to logged-in users.</p>
           <button
-            className="mt-4 px-4 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            className="mt-4 px-4 py-2 rounded-md bg-black text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
             onClick={handleProfileClick}
           >
             Continue
@@ -51,7 +51,7 @@ export default function Home() {
   };
 
   return (
-    <div className="h-screen bg-gradient-to-r from-[#1a1a1a] to-[#333333] relative">
+  <div className="h-screen bg-gradient-to-r from-[#1a1a1a] to-[#333333] relative">
   {isLoggedIn && showPopup && <Popup username={userData.username} />}
   {isLoggedIn && !showPopup && (
     <h1 className="text-4xl text-white">Welcome, {userData.username}!</h1>
