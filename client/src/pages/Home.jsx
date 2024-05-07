@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { handleError } from "../utils/handleError";
 import axios from "axios";
 import GuestView from "./GestView";
+import Whiteboard from "./WhiteBoard";
 axios.defaults.withCredentials = true;
 
 export default function Home() {
@@ -44,13 +45,13 @@ export default function Home() {
   };
 
   return (
-    <div className="h-screen bg-gradient-to-r from-[#1a1a1a] to-[#333333] relative">
+    <div
+    className={`h-screen ${
+      isLoggedIn ? 'bg-white' : 'bg-gradient-to-r from-[#1a1a1a] to-[#333333]'
+    } relative`}
+  >
       {isLoggedIn && showPopup && <Popup username={userData?.username} />}
-      {isLoggedIn && !showPopup && (
-        <div className="relative max-w-6xl min-h-screen px-4 mx-auto sm:px-6 flex flex-col items-center justify-center">
-          <h1 className="text-4xl text-white">Welcome, {userData?.username}!</h1>
-        </div>
-      )}
+      {isLoggedIn && !showPopup &&  <Whiteboard /> }
       {!isLoggedIn && <GuestView />}
     </div>
   );
