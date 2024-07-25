@@ -1,5 +1,5 @@
 import React from 'react';
-
+import {PencilIcon, ChatBubbleBottomCenterIcon, StopIcon,  } from '@heroicons/react/24/solid';
 const ToolBar = ({
   selectedTool,
   handleToolChange,
@@ -18,7 +18,7 @@ const ToolBar = ({
         }`}
         onClick={() => handleToolChange('brush')}
       >
-        Brush
+        <PencilIcon className="h-6 w-6" />
       </button>
       <button
         className={`px-4 py-2 rounded-md ${
@@ -26,7 +26,7 @@ const ToolBar = ({
         }`}
         onClick={() => handleToolChange('text')}
       >
-        Text
+         <ChatBubbleBottomCenterIcon className="h-6 w-6"/>
       </button>
       <button
         className={`px-4 py-2 rounded-md ${
