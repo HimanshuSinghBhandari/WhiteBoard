@@ -3,8 +3,10 @@ import axios from "axios";
 import { handleError } from "../utils/handleError";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useNavigate } from "react-router-dom";
-import Particles from "./particles"; // Import the Particles component
+import { useNavigate, Link } from "react-router-dom";
+import Particles from "./particles";
+import { motion } from "framer-motion";
+
 axios.defaults.withCredentials = true;
 
 const defaultValues = {
@@ -32,7 +34,6 @@ export default function Signup() {
     }
   };
 
-  //handle on change event function
   const handleOnChange = (e) => {
     setSignupInput((prevVal) => ({
       ...prevVal,
@@ -41,19 +42,28 @@ export default function Signup() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-50">
+    <div className="flex items-center justify-center min-h-screen">
       {/* Background with Particles */}
-      <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-[#1a1a1a] to-[#333333] ">
+      <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-[#1a1a1a] to-[#333333]">
         <Particles />
       </div>
 
       {/* Signup Form */}
-      <div className="relative z-10 px-8 py-6 mt-4 text-left bg-white shadow-lg rounded-lg max-w-md w-80">
+      <motion.div
+        initial={{ opacity: 0, y: -50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="relative z-10 px-8 py-6 mt-4 text-left bg-white shadow-lg rounded-lg max-w-md w-80"
+      >
         <h3 className="text-2xl font-bold text-center mb-4">Signup Page</h3>
-        <form onSubmit={handleSubmit}>
-          <div className="mt-4">
-            <label className="block" htmlFor="name">
-              Name
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.2, duration: 0.5 }}
+          >
+            <label className="block" htmlFor="username">
+              Username
             </label>
             <input
               className="w-full px-4 py-2 mt-2 border rounded-md"
@@ -64,21 +74,30 @@ export default function Signup() {
               value={signupInput.username}
               onChange={handleOnChange}
             />
-          </div>
-          <div className="mt-4">
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.4, duration: 0.5 }}
+          >
             <label className="block" htmlFor="email">
               Email
             </label>
             <input
               className="w-full px-4 py-2 mt-2 border rounded-md"
+              type="email"
               placeholder="Email"
               required
               name="email"
               value={signupInput.email}
               onChange={handleOnChange}
             />
-          </div>
-          <div className="mt-4">
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.6, duration: 0.5 }}
+          >
             <label className="block" htmlFor="password">
               Password
             </label>
@@ -91,17 +110,31 @@ export default function Signup() {
               value={signupInput.password}
               onChange={handleOnChange}
             />
-          </div>
-          <div className="flex items-baseline justify-center mt-6">
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.8, duration: 0.5 }}
+            className="flex items-center justify-center mt-6"
+          >
             <button
               type="submit"
               className="px-6 py-3 text-white bg-black rounded-lg hover:bg-gray-800 transition duration-300"
             >
               Sign Up
             </button>
-          </div>
+          </motion.div>
         </form>
-      </div>
+
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1, duration: 0.5 }}
+          className="mt-6 text-center text-sm"
+        >
+          Already have an account? <Link to="/login" className="font-bold text-black hover:underline">Login</Link>
+        </motion.p>
+      </motion.div>
 
       <ToastContainer
         position="bottom-right"
