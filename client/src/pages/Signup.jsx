@@ -27,7 +27,7 @@ export default function Signup() {
         password: signupInput.password,
         username: signupInput.username,
       });
-      navigate("/login");
+      navigate("/");
       toast.success("User Created Successfully!");
     } catch (error) {
       handleError(error);
