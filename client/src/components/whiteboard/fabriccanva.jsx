@@ -15,6 +15,7 @@ const CanvasComponent = () => {
     const newCanvas = new fabric.Canvas(canvasRef.current, {
       width: container.clientWidth,
       height: container.clientHeight,
+      
     });
     setCanvas(newCanvas);
 

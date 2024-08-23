@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { fabric } from 'fabric';
 import { FaPencilAlt, FaEraser, FaSearchPlus, FaSearchMinus, FaTrash, FaFont, FaShapes, FaImage } from 'react-icons/fa';
+import { FaSearch, FaUndo } from 'react-icons/fa';
 import { ChromePicker } from 'react-color';
 
 const ToolbarComponent = ({ canvas, setCanvas }) => {
@@ -10,6 +11,12 @@ const ToolbarComponent = ({ canvas, setCanvas }) => {
   const [selectedShape, setSelectedShape] = useState('rectangle');
   const [brushWidth, setBrushWidth] = useState(5);
   const [showColorPicker, setShowColorPicker] = useState(false);
+  const [showZoomBar, setShowZoomBar] = useState(false);
+  const [showUndoRedoBar, setShowUndoRedoBar] = useState(false);
+  const [zoomLevel, setZoomLevel] = useState(100);
+  const [undoStack, setUndoStack] = useState([]);
+  const [redoStack, setRedoStack] = useState([]);
+
 
   useEffect(() => {
     if (canvas) {
@@ -35,17 +42,40 @@ const ToolbarComponent = ({ canvas, setCanvas }) => {
     setSelectedTool('shape');
   };
 
-  const handleZoomIn = () => {
+ const handleZoom = (newZoomLevel) => {
     if (canvas) {
-      canvas.setZoom(canvas.getZoom() * 1.1);
+      const zoom = newZoomLevel / 100;
+      canvas.setZoom(zoom);
       canvas.renderAll();
+      setZoomLevel(newZoomLevel);
     }
   };
 
-  const handleZoomOut = () => {
-    if (canvas) {
-      canvas.setZoom(canvas.getZoom() / 1.1);
-      canvas.renderAll();
+  const handleUndo = () => {
+    if (canvas && undoStack.length > 0) {
+      const currentState = JSON.stringify(canvas.toJSON());
+      setRedoStack(prevStack => [...prevStack, currentState]);
+      
+      const prevState = undoStack[undoStack.length - 1];
+      setUndoStack(prevStack => prevStack.slice(0, -1));
+      
+      canvas.loadFromJSON(prevState, () => {
+        canvas.renderAll();
+      });
+    }
+  };
+  
+  const handleRedo = () => {
+    if (canvas && redoStack.length > 0) {
+      const currentState = JSON.stringify(canvas.toJSON());
+      setUndoStack(prevStack => [...prevStack, currentState]);
+      
+      const nextState = redoStack[redoStack.length - 1];
+      setRedoStack(prevStack => prevStack.slice(0, -1));
+      
+      canvas.loadFromJSON(nextState, () => {
+        canvas.renderAll();
+      });
     }
   };
 
@@ -160,11 +190,70 @@ const ToolbarComponent = ({ canvas, setCanvas }) => {
       <div className="flex space-x-4">
         <ToolButton icon={FaPencilAlt} tool="pencil" onClick={() => handleToolChange('pencil')} />
         <ToolButton icon={FaEraser} tool="eraser" onClick={() => handleToolChange('eraser')} />
-        <ToolButton icon={FaSearchPlus} tool="zoomIn" onClick={handleZoomIn} />
-        <ToolButton icon={FaSearchMinus} tool="zoomOut" onClick={handleZoomOut} />
+        
+        {/* Zoom functionality */}
+        <div 
+          className="relative"
+          onMouseEnter={() => setShowZoomBar(true)}
+          onMouseLeave={() => setShowZoomBar(false)}
+        >
+          <ToolButton icon={FaSearch} tool="zoom" />
+          {showZoomBar && (
+            <motion.div 
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 10 }}
+              className="absolute top-full left-0 mt-2 bg-purple-700 p-2 rounded-lg shadow-lg"
+            >
+              <input 
+                type="range"
+                min="50"
+                max="200"
+                value={zoomLevel}
+                onChange={(e) => handleZoom(parseInt(e.target.value))}
+                className="w-32 accent-indigo-500"
+              />
+              <span className="text-white ml-2">{zoomLevel}%</span>
+            </motion.div>
+          )}
+        </div>
+        
+        {/* Undo/Redo functionality */}
+        <div 
+          className="relative"
+          onMouseEnter={() => setShowUndoRedoBar(true)}
+          onMouseLeave={() => setShowUndoRedoBar(false)}
+        >
+          <ToolButton icon={FaUndo} tool="undoRedo" />
+          {showUndoRedoBar && (
+            <motion.div 
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 10 }}
+              className="absolute top-full left-0 mt-2 bg-purple-700 p-2 rounded-lg shadow-lg flex space-x-2"
+            >
+              <button 
+                onClick={handleUndo} 
+                disabled={undoStack.length === 0}
+                className="px-2 py-1 bg-indigo-500 text-white rounded-md disabled:opacity-50"
+              >
+                Undo
+              </button>
+              <button 
+                onClick={handleRedo} 
+                disabled={redoStack.length === 0}
+                className="px-2 py-1 bg-indigo-500 text-white rounded-md disabled:opacity-50"
+              >
+                Redo
+              </button>
+            </motion.div>
+          )}
+        </div>
+        
         <ToolButton icon={FaTrash} tool="delete" onClick={handleDelete} />
         <ToolButton icon={FaFont} tool="text" onClick={handleAddText} />
       </div>
+      
       <div className="flex items-center space-x-4">
         <motion.select
           whileHover={{ scale: 1.05 }}
